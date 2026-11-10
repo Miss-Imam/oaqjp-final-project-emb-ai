@@ -1,6 +1,5 @@
 """Emotion detection application using IBM Watson NLP."""
 
-import json
 import requests
 
 
@@ -30,9 +29,19 @@ def emotion_detector(text_to_analyze):
         timeout=30
     )
 
+    if response.status_code == 400:
+        return {
+            "anger": None,
+            "disgust": None,
+            "fear": None,
+            "joy": None,
+            "sadness": None,
+            "dominant_emotion": None
+        }
+
     response.raise_for_status()
 
-    formatted_response = json.loads(response.text)
+    formatted_response = response.json()
 
     emotions = formatted_response[
         "emotionPredictions"
